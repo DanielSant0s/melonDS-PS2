@@ -1,6 +1,17 @@
 # melonDS-Vita
 
-Vita port of MelonDS emulator
+PS2 port of MelonDS emulator, PoC, horrible performance.
+
+ just wanted to see if i could port this in a day xD.
+ 
+It remains to adapt the touch system and complete the sound integration with the AUDSRV
+
+It just works with < 8MB ROMs
+
+![gs_20220317164216](https://user-images.githubusercontent.com/47725160/158883327-42822ef0-762e-4ee8-8fe2-42ef6fd8261d.png)
+![gs_20220317164222](https://user-images.githubusercontent.com/47725160/158883342-b0823598-c087-4423-9940-6a174f56d38e.png)
+![gs_20220317164505](https://user-images.githubusercontent.com/47725160/158883352-91ccb9ac-cbfe-4e06-b2d8-a78cb2546198.png)
+
 
 The source code is provided under the GPLv3 license.
 
@@ -26,7 +37,7 @@ DS BIOS dumps from a DSi or 3DS can be used with no compatibility issues. DSi BI
 
 ### Linux:
 
-Requires VitaSDK to compile. Directions for installing VitaSDK are found at [VitaSDK/VDPM](https://github.com/vitasdk/vdpm)
+Requires PS2DEV to compile. Directions for installing PS2DEV are found at [PS2DEV](https://github.com/ps2dev)
 
 ```sh
 mkdir -p build/sce_sys
@@ -35,12 +46,6 @@ make
 
 ## How to Install
 
-Transfer melonDS.vpk to the Vita
-
-Run the vpk from an application like VitaShell to install
-
-Create the directory ux0:data/melonDS
-
-Transfer the three bios binaries to the melonDS directory along with any roms
+Don't install on real hardware, it only works on emulator for now.
 
 
