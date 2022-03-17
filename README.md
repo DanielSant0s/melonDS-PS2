@@ -1,4 +1,4 @@
-# melonDS-Vita
+# melonDS-PS2
 
 PS2 port of MelonDS emulator, PoC, horrible performance.
 
