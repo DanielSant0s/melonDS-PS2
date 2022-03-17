@@ -661,7 +661,7 @@ void Write(u8 val, u32 hold)
     switch (CurCmd)
     {
     case 0x00:
-        // Pokémon carts have an IR transceiver thing, and send this
+        // Pokï¿½mon carts have an IR transceiver thing, and send this
         // to bypass it and access SRAM.
         // TODO: design better
         CurCmd = val;
@@ -1085,6 +1085,8 @@ bool LoadROM(const char* path, const char* sram, bool direct)
     u32 gamecode;
     fseek(f, 0x0C, SEEK_SET);
     fread(&gamecode, 4, 1, f);
+
+    printf("ROM: %s - Size: %d- Gamecode: %x\n", path, len, gamecode);
 
     CartROM = new u8[CartROMSize];
     memset(CartROM, 0, CartROMSize);

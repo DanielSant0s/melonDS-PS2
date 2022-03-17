@@ -27,7 +27,7 @@
 //#include <knownfolders.h> // FUCK THAT SHIT
 extern "C" const GUID DECLSPEC_SELECTANY FOLDERID_RoamingAppData = {0x3eb685db, 0x65f9, 0x4cf6, {0xa0, 0x3a, 0xe3, 0xef, 0x65, 0x72, 0x9f, 0x3d}};
 #include <shlobj.h>
-#elif !defined(__PSP2__)
+#elif !defined(__PS2__)
 #include <glib.h>
 #endif
 
@@ -167,6 +167,10 @@ FILE* GetConfigFile(const char* fileName, const char* permissions)
     if (f) return f;
 #elif defined(__PSP2__)
     std::string path = std::string("ux0:/data/melonDS/") + fileName;
+    f = fopen(path.c_str(), permissions);
+    if (f) return f;
+#elif defined(__PS2__)
+    std::string path = std::string("host:melonDS/") + fileName;
     f = fopen(path.c_str(), permissions);
     if (f) return f;
 #else

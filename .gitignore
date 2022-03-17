@@ -23,3 +23,11 @@ $RECYCLE.BIN/
 # =========================
 
 *.o
+firmware.bin.bak
+firmware.bin
+.vscode/settings.json
+bios7.bin
+bios9.bin
+melonDS.ini
+melonDS/jogo.nds
+test.raw
