@@ -39,9 +39,8 @@ DS BIOS dumps from a DSi or 3DS can be used with no compatibility issues. DSi BI
 
 Requires PS2DEV to compile. Directions for installing PS2DEV are found at [PS2DEV](https://github.com/ps2dev)
 
-```sh
-mkdir -p build/sce_sys
-make
+```
+make all
 ```
 
 ## How to Install
