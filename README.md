@@ -2,7 +2,7 @@
 
 PS2 port of MelonDS emulator, PoC, horrible performance.
 
- just wanted to see if i could port this in a day xD.
+I just wanted to see if i could port this in a day xD.
  
 It remains to adapt the touch system and complete the sound integration with the AUDSRV
 
@@ -45,6 +45,16 @@ make all
 
 ## How to Install
 
-Don't install on real hardware, it only works on emulator for now.
+1- melonDS requires BIOS/firmware copies from a DS... Paste the bios7.bin, bios9.bin and firmware.bin next to the emulator (APPS/melonDS/)
+2- Paste the games in a folder called "roms" next to the emulator (APPS/melonDS/roms/)
+3- Paste the APPS and PLG folders in XEB+ folder to run it from XEB+ or just copy the melonDS folder somewhere
 
+## How to make it work
 
+Well... I'm very sorry to said that I failed to make it run on real hardware (tested on DECKARD, SCPH-79001), but it works fine in PCSX2, so go test it there.
+
+## PS2-port credits:
+Ported by: Daniel Santos
+Color fix and quality of life improvements: Howling Wolf & Chelsea
+Thanks to ffgriever, fjtrujy and uyjulian for their help
+Forked from: https://github.com/Rinnegatamante/melonDS-Vita
