@@ -170,7 +170,7 @@ FILE* GetConfigFile(const char* fileName, const char* permissions)
     f = fopen(path.c_str(), permissions);
     if (f) return f;
 #elif defined(__PS2__)
-    std::string path = std::string("host:melonDS/") + fileName;
+    std::string path = std::string("mass:/melonDS/") + fileName;
     f = fopen(path.c_str(), permissions);
     if (f) return f;
 #else

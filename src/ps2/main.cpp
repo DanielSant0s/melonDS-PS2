@@ -41,6 +41,14 @@
 #include <sbv_patches.h>
 #include <smem.h>
 
+#include <unistd.h>
+#include <sys/fcntl.h>
+#include <tamtypes.h>
+
+#define NEWLIB_PORT_AWARE
+#include <fileXio_rpc.h>
+#include <fileio.h>
+
 // Deal with conflicting typedefs
 #define u64 u64_
 #define s64 s64_
@@ -361,7 +369,8 @@ static void gsKit_flip(GSGLOBAL *gsGlobal)
 {
    if (!gsGlobal->FirstFrame)
    {
-      if (gsGlobal->DoubleBuffering == GS_SETTING_ON)
+      
+	  if (gsGlobal->DoubleBuffering == GS_SETTING_ON)
       {
          GS_SET_DISPFB2( gsGlobal->ScreenBuffer[
                gsGlobal->ActiveBuffer & 1] / 8192,
@@ -387,7 +396,9 @@ void flipScreen()
 
 string Menu()
 {
-    string rompath = "host:melonDS/";
+	char path[256];
+	getcwd(path, 256);
+    string rompath = strcat(path, "roms/");
     bool options = false;
 
     while (rompath.find(".nds", (rompath.length() - 4)) == string::npos)
@@ -458,7 +469,7 @@ string Menu()
                     rompath += "/" + files[selection];
                     break;
                 }
-                else if (checkPressed(PAD_CIRCLE) && rompath != "host:melonDS/")
+                else if (checkPressed(PAD_CIRCLE) && rompath != "mass:/melonDS/")
                 {
                     rompath = rompath.substr(0, rompath.rfind("/"));
                     break;
@@ -661,8 +672,11 @@ void initGraphics()
 	gsGlobal->DoubleBuffering = GS_SETTING_ON;
 	gsGlobal->PrimAlphaEnable = GS_SETTING_ON;
 	gsGlobal->Dithering = GS_SETTING_OFF;
-
-	gsKit_set_primalpha(gsGlobal, GS_SETREG_ALPHA(0, 1, 0, 1, 0), 0);
+	
+	gsGlobal->Interlace = GS_INTERLACED;
+	gsGlobal->Field = GS_FIELD;
+	
+	gsKit_set_primalpha(gsGlobal, GS_SETREG_ALPHA(0, 1, 0, 1, 128), 0);
 
 	dmaKit_init(D_CTRL_RELE_OFF, D_CTRL_MFD_OFF, D_CTRL_STS_UNSPEC, D_CTRL_STD_OFF, D_CTRL_RCYC_8, 1 << DMA_CHANNEL_GIF);
 	dmaKit_chan_init(DMA_CHANNEL_GIF);
@@ -673,9 +687,12 @@ void initGraphics()
 	gsKit_set_clamp(gsGlobal, GS_CMODE_REPEAT);
 	gsKit_vram_clear(gsGlobal);
 	gsKit_init_screen(gsGlobal);
+	gsKit_set_display_offset(gsGlobal, -0.5f, -0.5f);
 	gsKit_TexManager_init(gsGlobal);
     gsKit_add_vsync_handler(vsync_handler);
 	gsKit_mode_switch(gsGlobal, GS_ONESHOT);
+	
+	gsKit_sync_flip(gsGlobal);
 
     gsKit_clear(gsGlobal, BLACK_RGBAQ);	
 	gsKit_vsync_wait();
@@ -694,7 +711,10 @@ int main(int argc, char **argv){
     while (!SifIopReset("", 0)){};
     while (!SifIopSync()){};
     SifInitRpc(0);
-
+	int x, y;
+	int cy;
+	u8  *image;
+	u8  *p;
     
     // install sbv patch fix
     printf("Installing SBV Patches...\n");
@@ -766,11 +786,11 @@ int main(int argc, char **argv){
     {
         while (true){
             gsKit_clear(gsGlobal, BLACK_RGBAQ);	
-            gsKit_fontm_print_scaled(gsGlobal, font, 5-0.5f, 20-0.5f, 1, 0.6, 0x80FFFFFF, "One or more of the following required files don't exist or couldn't be accessed:");
+            gsKit_fontm_print_scaled(gsGlobal, font, 5-0.5f, 20-0.5f, 1, 0.6, 0x80FFFFFF, "One or more of the following required files don't exist:");
             gsKit_fontm_print_scaled(gsGlobal, font, 5-0.5f, 40-0.5f, 1, 0.6, 0x80FFFFFF, "bios7.bin -- ARM7 BIOS");
             gsKit_fontm_print_scaled(gsGlobal, font, 5-0.5f, 60-0.5f, 1, 0.6, 0x80FFFFFF, "bios9.bin -- ARM9 BIOS");
             gsKit_fontm_print_scaled(gsGlobal, font, 5-0.5f, 80-0.5f, 1, 0.6, 0x80FFFFFF, "firmware.bin -- firmware image");
-            gsKit_fontm_print_scaled(gsGlobal, font, 5-0.5f, 150-0.5f, 1, 0.6, 0x80FFFFFF, "Dump the files from your DS and place them in ux0:/data/melonDS");
+            gsKit_fontm_print_scaled(gsGlobal, font, 5-0.5f, 150-0.5f, 1, 0.6, 0x80FFFFFF, "Dump the files from your DS and place them in your pendrive.");
             flipScreen();
         }
     }
