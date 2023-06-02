@@ -10,7 +10,7 @@ EE_LIBS = -L$(PS2SDK)/ports/lib -L$(PS2DEV)/gsKit/lib/ -lpatches -lfileXio -lpad
 
 EE_INCS += -I$(PS2DEV)/gsKit/include -I$(PS2SDK)/ports/include -I$(PS2SDK)/ports/include/zlib
 
-IOP_MODULES = src/sio2man.o src/mcman.o src/mcserv.o src/padman.o src/libsd.o \
+IOP_MODULES = src/iomanx.o src/filexio.o src/sio2man.o src/mcman.o src/mcserv.o src/padman.o src/libsd.o \
 			  src/usbd.o src/audsrv.o src/bdm.o src/bdmfs_vfat.o \
 			  src/usbmass_bd.o
 
@@ -25,6 +25,14 @@ EE_CXXFLAGS += -mtune=r5900 -msingle-float -fno-exceptions -std=gnu++11 -D__PS2_
 all: $(EE_BIN)
 
 #-------------------- Embedded IOP Modules ------------------------#
+src/iomanx.s: $(PS2SDK)/iop/irx/iomanX.irx
+	echo "Embedding iomanX Driver..."
+	$(BIN2S) $< $@ iomanX_irx
+
+src/filexio.s: $(PS2SDK)/iop/irx/fileXio.irx
+	echo "Embedding fileXio Driver..."
+	$(BIN2S) $< $@ fileXio_irx
+
 src/sio2man.s: $(PS2SDK)/iop/irx/sio2man.irx
 	echo "Embedding SIO2MAN Driver..."
 	$(BIN2S) $< $@ sio2man_irx
