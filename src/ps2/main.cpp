@@ -41,6 +41,8 @@
 #include <sbv_patches.h>
 #include <smem.h>
 
+//
+
 #include <unistd.h>
 #include <sys/fcntl.h>
 #include <tamtypes.h>
@@ -89,7 +91,10 @@ extern unsigned char usbmass_bd_irx;
 extern unsigned int size_usbmass_bd_irx;
 extern unsigned char audsrv_irx;
 extern unsigned int size_audsrv_irx;
-
+extern unsigned char iomanX_irx[];
+extern unsigned int size_iomanX_irx;
+extern unsigned char fileXio_irx[];
+extern unsigned int size_fileXio_irx;
 
 static const u64 BLACK_RGBAQ   = GS_SETREG_RGBAQ(0x00,0x00,0x00,0x80,0x00);
 
@@ -98,6 +103,7 @@ GSFONTM *font = NULL;
 static int vsync_sema_id = 0;
 
 GSTEXTURE *vram_buffer;
+GSTEXTURE *new_vram_buffer;
 struct padButtonStatus padbuttons;
 uint32_t pad = 0;
 uint32_t oldpad = 0;
@@ -721,8 +727,21 @@ int main(int argc, char **argv){
     sbv_patch_enable_lmb();
     sbv_patch_disable_prefix_check(); 
     sbv_patch_fileio(); 
+	
+	DIR *directorytoverify;
+	directorytoverify = opendir("host:.");
+	if(directorytoverify==NULL){
+		SifExecModuleBuffer(&iomanX_irx, size_iomanX_irx, 0, NULL, NULL);
+		SifExecModuleBuffer(&fileXio_irx, size_fileXio_irx, 0, NULL, NULL);
+	}
+	SifExecModuleBuffer(&sio2man_irx, size_sio2man_irx, 0, NULL, NULL);
+	if(directorytoverify==NULL){
+		fileXioInit();
+	}
+	if(directorytoverify!=NULL){
+		closedir(directorytoverify);
+	}
 
-    SifExecModuleBuffer(&sio2man_irx, size_sio2man_irx, 0, NULL, NULL);
     SifExecModuleBuffer(&mcman_irx, size_mcman_irx, 0, NULL, NULL);
     SifExecModuleBuffer(&mcserv_irx, size_mcserv_irx, 0, NULL, NULL);
     initMC();
